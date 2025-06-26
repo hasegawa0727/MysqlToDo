@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.TodoMapper">
+    <select id="findById" resultType="com.example.demo.entity.Todo">
+        SELECT * FROM todo WHERE id  = #{id}
+    </select>
+    <select id="findAll" resultType="com.example.demo.entity.Todo">
+    	SELECT * FROM todo
+    </select>
+    <select id="sortTodo" resultType="com.example.demo.entity.Todo">
+    	SELECT * FROM todo
+    	ORDER BY
+    		CASE status
+    			WHEN '未着手' THEN 1
+    			WHEN '進行中' THEN 2
+    			WHEN '完了' THEN 3
+    			ELSE 4
+    		END,
+    		id ASC
+    </select>
+    <select id="searchTodo" resultType="com.example.demo.entity.Todo">
+    	SELECT * FROM todo
+    	WHERE title LIKE CONCAT('%', #{body}, '%')
+    		OR status LIKE CONCAT('%', #{body}, '%')
+    		OR description LIKE CONCAT('%', #{body}, '%')
+    </select>
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+    	INSERT INTO todo(title, status, description) VALUES (#{todo.title}, '未着手', #{todo.description})
+    </insert>
+    <update id="update">
+    	UPDATE todo
+    	SET title = #{todo.title},
+    		status = #{todo.status},
+    		description = #{todo.description},
+    		updated_at = #{todo.updatedAt}
+    	WHERE id = #{todo.id}
+    </update>
+    <delete id="delete">
+    	DELETE FROM todo WHERE id = #{id}
+    </delete>
+</mapper>
